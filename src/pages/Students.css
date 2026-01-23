@@ -1,0 +1,204 @@
+/* ========================================
+   STUDENTS PAGE STYLES
+   ======================================== */
+
+.students-page {
+  width: 100%;
+}
+
+.page-header {
+  margin-bottom: var(--nx-space-lg);
+}
+
+.page-header h1 {
+  font-size: var(--nx-h2);
+  margin-bottom: var(--nx-space-xs);
+  color: var(--nx-text-main);
+}
+
+.page-header p {
+  font-size: var(--nx-small);
+  color: var(--nx-text-muted);
+}
+
+/* ========== LAYOUT ========== */
+.students-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: var(--nx-space-lg);
+}
+
+.students-list-panel {
+  min-height: 500px;
+}
+
+.students-detail-panel {
+  min-height: 500px;
+}
+
+/* ========== STUDENT LIST ========== */
+.students-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.student-list-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 80px;
+  gap: var(--nx-space-md);
+  align-items: center;
+  padding: var(--nx-space-md);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--nx-border-light);
+  cursor: pointer;
+  transition: all var(--nx-transition-base);
+  width: 100%;
+  text-align: left;
+}
+
+.student-list-item:hover {
+  background-color: var(--nx-bg-hover);
+}
+
+.student-list-item.active {
+  background-color: var(--nx-primary);
+  color: var(--nx-text-inverse);
+  border-bottom-color: var(--nx-primary);
+}
+
+.student-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--nx-primary);
+  color: var(--nx-text-inverse);
+  border-radius: var(--nx-radius-full);
+  font-weight: var(--nx-weight-semibold);
+  flex-shrink: 0;
+}
+
+.student-list-item.active .student-avatar {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.student-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.student-name {
+  font-weight: var(--nx-weight-semibold);
+  font-size: var(--nx-body);
+}
+
+.student-email {
+  font-size: var(--nx-small);
+  color: var(--nx-text-muted);
+}
+
+.student-list-item.active .student-email {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.student-status {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ========== DETAIL PANEL ========== */
+.detail-section {
+  margin-bottom: var(--nx-space-lg);
+}
+
+.detail-label {
+  font-size: var(--nx-small);
+  font-weight: var(--nx-weight-semibold);
+  color: var(--nx-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin-bottom: var(--nx-space-xs);
+  margin: 0 0 var(--nx-space-xs) 0;
+}
+
+.detail-value {
+  font-size: var(--nx-body);
+  color: var(--nx-text-main);
+  margin: 0;
+}
+
+.detail-actions {
+  display: flex;
+  gap: var(--nx-space-sm);
+  margin-top: var(--nx-space-lg);
+  padding-top: var(--nx-space-lg);
+  border-top: 1px solid var(--nx-border-light);
+}
+
+.detail-actions button {
+  flex: 1;
+}
+
+.empty-state {
+  padding: var(--nx-space-lg);
+  text-align: center;
+  color: var(--nx-text-muted);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .students-layout {
+    grid-template-columns: 280px 1fr;
+  }
+
+  .students-list {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .students-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .students-list-panel,
+  .students-detail-panel {
+    min-height: 300px;
+  }
+
+  .student-list-item {
+    grid-template-columns: 36px 1fr 60px;
+  }
+
+  .student-name {
+    font-size: var(--nx-small);
+  }
+
+  .nx-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .nx-grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .nx-stat-card {
+    padding: var(--nx-space-sm);
+  }
+
+  .student-list-item {
+    grid-template-columns: 32px 1fr;
+    gap: var(--nx-space-sm);
+  }
+
+  .student-status {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    margin-top: var(--nx-space-xs);
+  }
+}

@@ -1,0 +1,192 @@
+/* ========================================
+   SETTINGS PAGE STYLES
+   ======================================== */
+
+.settings-page {
+  width: 100%;
+}
+
+.page-header {
+  margin-bottom: var(--nx-space-lg);
+}
+
+.page-header h1 {
+  font-size: var(--nx-h2);
+  margin-bottom: var(--nx-space-xs);
+  color: var(--nx-text-main);
+}
+
+.page-header p {
+  font-size: var(--nx-small);
+  color: var(--nx-text-muted);
+}
+
+/* ========== SETTINGS CONTAINER ========== */
+.settings-container {
+  max-width: 800px;
+}
+
+/* ========== SETTING ROW ========== */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--nx-space-md);
+  border-bottom: 1px solid var(--nx-border-light);
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-row > div {
+  flex: 1;
+}
+
+.setting-title {
+  font-weight: var(--nx-weight-semibold);
+  margin: 0 0 var(--nx-space-xs) 0;
+  color: var(--nx-text-main);
+}
+
+.setting-description {
+  font-size: var(--nx-small);
+  color: var(--nx-text-muted);
+  margin: 0;
+}
+
+.setting-value {
+  font-size: var(--nx-body);
+  color: var(--nx-text-secondary);
+  margin: var(--nx-space-xs) 0 0 0;
+}
+
+/* ========== TOGGLE SWITCH ========== */
+.toggle-switch {
+  width: 50px;
+  height: 26px;
+  appearance: none;
+  background-color: var(--nx-bg-muted);
+  border: 2px solid var(--nx-border-light);
+  border-radius: 13px;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--nx-transition-base);
+  outline: none;
+}
+
+.toggle-switch:checked {
+  background-color: var(--nx-accent);
+  border-color: var(--nx-accent);
+}
+
+.toggle-switch::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: white;
+  top: 2px;
+  left: 2px;
+  transition: all var(--nx-transition-base);
+}
+
+.toggle-switch:checked::before {
+  left: 26px;
+}
+
+/* ========== SETTING FIELD ========== */
+.setting-field {
+  padding: var(--nx-space-md);
+  border-bottom: 1px solid var(--nx-border-light);
+}
+
+.setting-field:last-child {
+  border-bottom: none;
+}
+
+.setting-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nx-space-sm);
+}
+
+.setting-label .setting-title {
+  margin: 0;
+}
+
+.setting-label .nx-input {
+  width: 100%;
+}
+
+/* ========== ABOUT INFO ========== */
+.about-info {
+  text-align: center;
+}
+
+.about-info p {
+  margin: var(--nx-space-sm) 0;
+}
+
+.about-info strong {
+  font-weight: var(--nx-weight-semibold);
+  color: var(--nx-text-main);
+}
+
+/* ========== SETTINGS ACTIONS ========== */
+.settings-actions {
+  display: flex;
+  gap: var(--nx-space-sm);
+  margin-top: var(--nx-space-lg);
+}
+
+.settings-actions button {
+  flex: 1;
+  max-width: 200px;
+}
+
+.nx-card-body .setting-row:last-child .nx-btn {
+  margin-right: var(--nx-space-sm);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .settings-container {
+    max-width: 100%;
+  }
+
+  .setting-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nx-space-md);
+  }
+
+  .toggle-switch {
+    margin-top: var(--nx-space-sm);
+  }
+
+  .settings-actions {
+    flex-wrap: wrap;
+  }
+
+  .settings-actions button {
+    max-width: 100%;
+    flex: 1;
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: var(--nx-h3);
+  }
+
+  .setting-row {
+    padding: var(--nx-space-sm);
+  }
+
+  .setting-field {
+    padding: var(--nx-space-sm);
+  }
+}

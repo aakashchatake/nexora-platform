@@ -1,0 +1,220 @@
+/* ========================================
+   INTERACTIVE DASHBOARD STYLES
+   System feel: selection feedback, micro-responses, context awareness
+   ======================================== */
+
+.interactive-dashboard {
+  width: 100%;
+}
+
+/* ========== HEADER ========== */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--nx-space-lg);
+}
+
+.dashboard-header h1 {
+  font-size: var(--nx-h2);
+  color: var(--nx-text-main);
+  margin-bottom: var(--nx-space-xs);
+}
+
+.dashboard-header p {
+  font-size: var(--nx-small);
+  color: var(--nx-text-muted);
+}
+
+/* ========== TAB NAVIGATION ========== */
+.dashboard-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--nx-border-light);
+  background-color: var(--nx-bg-muted);
+}
+
+.tab-button {
+  flex: 1;
+  padding: var(--nx-space-md);
+  font-size: var(--nx-body);
+  font-weight: var(--nx-weight-medium);
+  color: var(--nx-text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--nx-transition-base);
+  position: relative;
+}
+
+.tab-button:hover {
+  color: var(--nx-text-main);
+  background-color: var(--nx-bg-main);
+}
+
+.tab-button.active {
+  color: var(--brand-orange);
+  border-bottom-color: var(--brand-orange);
+  background-color: var(--surface-white);
+}
+
+/* ========== TAB CONTENT ========== */
+.tab-content {
+  animation: fadeIn 150ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.8;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ========== FILTER SECTION ========== */
+.filter-section {
+  border-bottom: 1px solid var(--nx-border-light);
+  margin-bottom: 0;
+}
+
+.filter-badge {
+  padding: 6px 12px;
+  font-size: var(--nx-small);
+  font-weight: var(--nx-weight-medium);
+  background-color: var(--nx-bg-muted);
+  color: var(--nx-text-secondary);
+  border: 1px solid var(--nx-border-light);
+  border-radius: var(--nx-radius-md);
+  cursor: pointer;
+  transition: all var(--nx-transition-base);
+}
+
+.filter-badge:hover {
+  background-color: var(--nx-bg-main);
+  border-color: var(--nx-border-medium);
+  color: var(--nx-text-main);
+}
+
+.filter-badge.active {
+  background-color: var(--nx-primary);
+  color: var(--nx-text-inverse);
+  border-color: var(--nx-primary);
+}
+
+/* ========== TABLE ROWS - INTERACTIVE ========== */
+.attendance-row,
+.result-row {
+  cursor: pointer;
+  transition: all var(--nx-transition-base);
+}
+
+.attendance-row:hover,
+.result-row:hover {
+  background-color: var(--nx-bg-hover);
+  color: var(--nx-text-main);
+}
+
+.attendance-row.selected,
+.result-row.selected {
+  background-color: var(--nx-primary);
+  color: var(--nx-text-inverse);
+}
+
+.attendance-row.selected td,
+.result-row.selected td {
+  color: var(--nx-text-inverse);
+}
+
+.attendance-row.selected .nx-badge,
+.result-row.selected .nx-badge {
+  opacity: 0.9;
+}
+
+.attendance-row.selected .nx-text-muted,
+.result-row.selected .nx-text-muted {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.student-name {
+  font-weight: var(--nx-weight-medium);
+}
+
+/* ========== EMPTY STATE ========== */
+.empty-state {
+  padding: var(--nx-space-lg);
+  text-align: center;
+  background-color: var(--nx-bg-muted);
+  border-radius: var(--nx-radius-md);
+  color: var(--nx-text-muted);
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========== CONTEXT PANEL - SELECTION FEEDBACK ========== */
+.context-panel {
+  border: 2px solid var(--brand-orange);
+  background: linear-gradient(135deg, rgba(255, 106, 0, 0.02) 0%, transparent 100%);
+  animation: slideIn 200ms ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.context-panel h3 {
+  color: var(--nx-primary);
+  font-size: var(--nx-h3);
+}
+
+.context-panel p {
+  margin: var(--nx-space-xs) 0;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+  }
+
+  .nx-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tab-button {
+    font-size: var(--nx-small);
+    padding: var(--nx-space-sm);
+  }
+
+  .filter-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  .context-panel {
+    margin-top: var(--nx-space-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .nx-grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .nx-stat-card {
+    padding: var(--nx-space-sm);
+  }
+
+  .nx-stat-value {
+    font-size: 1.5rem;
+  }
+}
