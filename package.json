@@ -1,6 +1,7 @@
 {
   "name": "nexora-academic-frontend",
   "version": "1.0.0",
+  "homepage": "https://aakashchatake.github.io/nexora-demo-freeze-v1",
   "description": "Nexora Academic Management System - React Frontend",
   "private": true,
   "dependencies": {
