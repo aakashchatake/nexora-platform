@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, CheckCircle2, BarChart3, Settings, Menu, ChevronDown, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, CheckCircle2, BarChart3, Settings, Menu, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import './InstituteLayout.css';
 

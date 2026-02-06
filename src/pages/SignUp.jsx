@@ -78,7 +78,7 @@ export default function SignUp() {
       }
 
       // Sign up with Supabase Auth
-      const { data, error: signupError } = await supabase.auth.signUp({
+      const { error: signupError } = await supabase.auth.signUp({
         email: formData.email.toLowerCase(),
         password: formData.password,
         options: {
