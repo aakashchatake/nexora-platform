@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { courses } from '../data/courses';
 import { getAttendanceForCourse, getAttendanceSummary } from '../data/attendance';
 import { getResultsForCourse } from '../data/results';
+import { useAuth } from '../hooks/useAuth';
 import './InteractiveDashboard.css';
 
 export default function InteractiveDashboard() {
+  const { user } = useAuth();
+  
   // State management for interactions
   const [selectedCourse, setSelectedCourse] = useState(courses[0].id);
   const [activeTab, setActiveTab] = useState('attendance');
@@ -52,14 +55,37 @@ export default function InteractiveDashboard() {
     }
   };
 
+  // Format institution name with proper title case
+  const formatInstitutionName = (name) => {
+    if (!name) return 'Dashboard';
+    // Words that should stay lowercase in title case
+    const lowercaseWords = ['of', 'and', 'the', 'in', 'on', 'at', 'to', 'for', 'a', 'an'];
+    
+    const words = name.toLowerCase().split(' ');
+    return words.map((word, index) => {
+      // Always capitalize first and last word
+      if (index === 0 || index === words.length - 1) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      // Keep small words lowercase
+      if (lowercaseWords.includes(word)) {
+        return word;
+      }
+      // Capitalize other words
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(' ');
+  };
+
   return (
     <div className="interactive-dashboard">
-      {/* Header Section - Changes based on selection */}
+      {/* Header Section - Shows institution and user info */}
       <div className="dashboard-header nx-mb-lg">
         <div>
-          <h1 className="nx-mb-sm">{course?.name}</h1>
+          <h1 className="nx-mb-sm">
+            {formatInstitutionName(user?.institutionName) || 'Dashboard'}
+          </h1>
           <p className="nx-text-muted">
-            {course?.code} • {course?.instructor} • {filteredAttendance.length} records shown
+            Welcome, {user?.fullName || 'Administrator'} • {user?.institutionType || 'Institution'} • {user?.email}
           </p>
         </div>
       </div>

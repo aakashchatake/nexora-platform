@@ -80,6 +80,7 @@
 .institute-brand {
   display: flex;
   align-items: center;
+  padding-right: var(--nx-space-md);
 }
 
 .brand-logo {
@@ -89,15 +90,26 @@
   letter-spacing: 0.02em;
 }
 
+.brand-separator {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--nx-space-md);
+  color: var(--nx-border-light);
+  font-size: var(--nx-h3);
+  font-weight: var(--nx-weight-light);
+  user-select: none;
+}
+
 .institute-name {
-  padding-left: var(--nx-space-md);
-  border-left: 1px solid var(--nx-border-light);
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .institute-name-text {
   font-size: var(--nx-body);
-  font-weight: var(--nx-weight-medium);
-  color: var(--nx-text-secondary);
+  font-weight: var(--nx-weight-semibold);
+  color: var(--nx-primary);
+  letter-spacing: 0.005em;
 }
 
 /* User Menu - Micro-response on hover */

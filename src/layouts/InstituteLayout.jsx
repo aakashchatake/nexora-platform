@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
-import { LayoutDashboard, Users, CheckCircle2, BarChart3, Settings, Menu, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { LayoutDashboard, Users, CheckCircle2, BarChart3, Settings, Menu, ChevronDown, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
 import './InstituteLayout.css';
 
 export default function InstituteLayout({ children }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [institutionName, setInstitutionName] = useState('NEXORA');
+  const [userFullName, setUserFullName] = useState('User');
+  const [userRole, setUserRole] = useState('User');
+
+  useEffect(() => {
+    // Get institution info from localStorage
+    const instName = localStorage.getItem('nexora_institution_name') || 'NEXORA';
+    const fullName = localStorage.getItem('nexora_full_name') || 'User';
+    setInstitutionName(instName);
+    setUserFullName(fullName);
+    setUserRole('Admin');
+  }, []);
 
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
@@ -14,13 +30,51 @@ export default function InstituteLayout({ children }) {
     { id: 'settings', label: 'Settings', icon: Settings, path: '/settings' },
   ];
 
-  // Determine active item from current path
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/dashboard';
-  const activeItem = navigationItems.find(item => item.path === currentPath)?.id || 'dashboard';
+  // Get active item from current location pathname
+  const activeItem = navigationItems.find(item => item.path === location.pathname)?.id || 'dashboard';
 
   const handleNavClick = (item) => {
-    window.location.pathname = item.path;
+    navigate(item.path);
     setMobileMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      localStorage.removeItem('nexora_institution_name');
+      localStorage.removeItem('nexora_full_name');
+      localStorage.removeItem('nexora_email');
+      localStorage.removeItem('nexora_institute_id');
+      navigate('/platform');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  // Get user initials
+  const initials = userFullName 
+    ? userFullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : 'A';
+
+  // Format institution name with proper title case
+  const formatInstitutionName = (name) => {
+    if (!name) return 'NEXORA';
+    // Words that should stay lowercase in title case
+    const lowercaseWords = ['of', 'and', 'the', 'in', 'on', 'at', 'to', 'for', 'a', 'an'];
+    
+    const words = name.toLowerCase().split(' ');
+    return words.map((word, index) => {
+      // Always capitalize first and last word
+      if (index === 0 || index === words.length - 1) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      // Keep small words lowercase
+      if (lowercaseWords.includes(word)) {
+        return word;
+      }
+      // Capitalize other words
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(' ');
   };
 
   return (
@@ -38,20 +92,23 @@ export default function InstituteLayout({ children }) {
           <div className="institute-brand">
             <span className="brand-logo">NEXORA</span>
           </div>
+          <div className="brand-separator">
+            <span>|</span>
+          </div>
           <div className="institute-name">
-            <span className="institute-name-text">Spring University</span>
+            <span className="institute-name-text">{formatInstitutionName(institutionName)}</span>
           </div>
         </div>
 
         <div className="header-right">
           <div className="header-context">
             <span className="context-label">Active User</span>
-            <span className="context-value">Administrator</span>
+            <span className="context-value">{userRole}</span>
           </div>
-          <button className="user-menu-trigger">
-            <span className="user-avatar">A</span>
-            <span className="user-name">Admin</span>
-            <ChevronDown size={16} strokeWidth={1.5} className="dropdown-arrow" />
+          <button className="user-menu-trigger" onClick={handleLogout} title="Logout">
+            <span className="user-avatar">{initials}</span>
+            <span className="user-name">{userFullName.split(' ')[0]}</span>
+            <LogOut size={16} strokeWidth={1.5} className="dropdown-arrow" style={{cursor: 'pointer'}} />
           </button>
         </div>
       </header>

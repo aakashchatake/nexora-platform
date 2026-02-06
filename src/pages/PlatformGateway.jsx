@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
 
 export default function PlatformGateway() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    instituteId: '',
-    adminEmail: '',
+    email: '',
     password: '',
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -15,16 +18,40 @@ export default function PlatformGateway() {
       ...prev,
       [name]: value,
     }));
+    setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulated submit - no backend logic yet
-    setTimeout(() => {
-      console.log('Form submitted:', formData);
+    setError('');
+
+    try {
+      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (loginError) {
+        throw new Error(loginError.message || 'Login failed');
+      }
+
+      // Store user metadata in localStorage
+      const user = data.user;
+      const meta = user?.user_metadata || {};
+      localStorage.setItem('nexora_institution_name', meta.institution_name || 'NEXORA');
+      localStorage.setItem('nexora_full_name', meta.full_name || '');
+      localStorage.setItem('nexora_email', user.email || '');
+      localStorage.setItem('nexora_institute_id', meta.institute_id || '');
+
+      // Redirect to dashboard
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message || 'An error occurred during login');
+      console.error('Login error:', err);
+    } finally {
       setIsLoading(false);
-    }, 800);
+    }
   };
 
   return (
@@ -67,6 +94,22 @@ export default function PlatformGateway() {
           </p>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div style={{
+            backgroundColor: '#fee',
+            border: '1px solid #fcc',
+            borderRadius: 'var(--radius-md)',
+            padding: 'var(--spacing-md)',
+            marginBottom: 'var(--spacing-md)',
+            color: '#c33',
+            fontSize: '0.9rem',
+            textAlign: 'center'
+          }}>
+            {error}
+          </div>
+        )}
+
         {/* Login Card */}
         <div className="card" style={{
           padding: 'var(--spacing-lg)',
@@ -91,7 +134,7 @@ export default function PlatformGateway() {
           </p>
 
           <form onSubmit={handleSubmit}>
-            {/* Institute ID / Domain Field */}
+            {/* Email Field */}
             <div style={{ marginBottom: 'var(--spacing-md)' }}>
               <label style={{
                 display: 'block',
@@ -100,54 +143,13 @@ export default function PlatformGateway() {
                 fontWeight: 'var(--font-weight-semibold)',
                 fontSize: '0.9rem',
               }}>
-                Institute ID or Domain
-              </label>
-              <input
-                type="text"
-                name="instituteId"
-                placeholder="e.g., university.nexora.io"
-                value={formData.instituteId}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  padding: 'var(--spacing-md)',
-                  border: `1px solid var(--nexora-border)`,
-                  borderRadius: 'var(--radius-md)',
-                  fontSize: '1rem',
-                  fontFamily: 'inherit',
-                  backgroundColor: 'var(--nexora-surface)',
-                  color: 'var(--nexora-text-primary)',
-                  boxSizing: 'border-box',
-                  transition: 'border-color 0.2s, box-shadow 0.2s',
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = 'var(--nexora-primary-blue)';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(30, 58, 138, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = 'var(--nexora-border)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-
-            {/* Admin Email Field */}
-            <div style={{ marginBottom: 'var(--spacing-md)' }}>
-              <label style={{
-                display: 'block',
-                marginBottom: 'var(--spacing-xs)',
-                color: 'var(--nexora-text-primary)',
-                fontWeight: 'var(--font-weight-semibold)',
-                fontSize: '0.9rem',
-              }}>
-                Admin Email
+                Email Address
               </label>
               <input
                 type="email"
-                name="adminEmail"
+                name="email"
                 placeholder="admin@institution.edu"
-                value={formData.adminEmail}
+                value={formData.email}
                 onChange={handleChange}
                 required
                 style={{
@@ -228,31 +230,40 @@ export default function PlatformGateway() {
                 opacity: isLoading ? 0.7 : 1,
               }}
             >
-              {isLoading ? 'Authenticating...' : 'Continue to Nexora'}
+              {isLoading ? 'Authenticating...' : 'Sign In'}
             </button>
           </form>
         </div>
 
-        {/* Secondary Link */}
+        {/* Sign Up Link */}
         <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-lg)' }}>
+          <p style={{
+            color: 'var(--nexora-text-secondary)',
+            fontSize: '0.9rem',
+            margin: 0,
+            marginBottom: 'var(--spacing-sm)'
+          }}>
+            Don't have an account?
+          </p>
           <button
             type="button"
-            onClick={() => console.log('Student/Faculty login - not yet implemented')}
+            onClick={() => navigate('/signup')}
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--nexora-text-muted)',
+              color: 'var(--nexora-primary-blue)',
               textDecoration: 'none',
-              fontSize: '0.9rem',
+              fontSize: '0.95rem',
               cursor: 'pointer',
-              transition: 'color 0.2s',
+              fontWeight: 'var(--font-weight-semibold)',
               fontFamily: 'inherit',
               padding: 0,
+              transition: 'opacity 0.2s'
             }}
-            onMouseEnter={(e) => e.target.style.color = 'var(--nexora-primary-blue)'}
-            onMouseLeave={(e) => e.target.style.color = 'var(--nexora-text-muted)'}
+            onMouseEnter={(e) => e.target.style.opacity = '0.7'}
+            onMouseLeave={(e) => e.target.style.opacity = '1'}
           >
-            Looking for student or faculty login?
+            Create Institution Account
           </button>
         </div>
 

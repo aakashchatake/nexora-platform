@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { supabase } from '../lib/supabaseClient';
+import { useNavigate } from 'react-router-dom';
 import './Settings.css';
 
 export default function Settings() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [emailOnAttendance, setEmailOnAttendance] = useState(true);
   const [emailOnResults, setEmailOnResults] = useState(false);
@@ -10,6 +15,16 @@ export default function Settings() {
 
   const handleSave = () => {
     alert('Settings saved successfully!');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      localStorage.clear();
+      navigate('/platform');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
@@ -119,8 +134,30 @@ export default function Settings() {
           <div className="nx-card-body">
             <div className="setting-row">
               <div>
-                <p className="setting-title">Current Institution</p>
-                <p className="setting-value">Spring University</p>
+                <p className="setting-title">Institution Name</p>
+                <p className="setting-value">{user?.institutionName || 'Not specified'}</p>
+                <p className="nx-text-muted nx-text-sm">To update institution details, please contact support</p>
+              </div>
+            </div>
+
+            <div className="setting-row">
+              <div>
+                <p className="setting-title">Institution ID</p>
+                <p className="setting-value">{user?.instituteId || 'Not specified'}</p>
+              </div>
+            </div>
+
+            <div className="setting-row">
+              <div>
+                <p className="setting-title">Institution Type</p>
+                <p className="setting-value">{user?.institutionType || 'Not specified'}</p>
+              </div>
+            </div>
+
+            <div className="setting-row">
+              <div>
+                <p className="setting-title">Account Email</p>
+                <p className="setting-value">{user?.email || 'Not specified'}</p>
               </div>
             </div>
 
@@ -140,7 +177,35 @@ export default function Settings() {
 
             <div className="setting-row" style={{ borderTop: '1px solid var(--nx-border-light)', paddingTop: 'var(--nx-space-lg)', marginTop: 'var(--nx-space-lg)' }}>
               <button className="nx-btn nx-btn-secondary">Change Password</button>
-              <button className="nx-btn nx-btn-secondary">Logout</button>
+              <button className="nx-btn nx-btn-secondary" onClick={handleLogout}>Logout</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Support Section */}
+        <div className="nx-card nx-mb-lg">
+          <div className="nx-card-header">
+            <h3>Support & Contact</h3>
+          </div>
+          <div className="nx-card-body">
+            <div className="support-info">
+              <p className="setting-title">Need help or want to update critical information?</p>
+              <p className="nx-text-muted nx-text-sm nx-mb-md">Our support team is here to assist you with account changes, technical issues, and billing inquiries.</p>
+              
+              <div className="support-contacts nx-mb-md">
+                <div className="support-item">
+                  <p className="nx-text-sm"><strong>NEXORA Support</strong></p>
+                  <a href="mailto:nexora@chatakeinnoworks.com" className="support-link">nexora@chatakeinnoworks.com</a>
+                </div>
+                <div className="support-item">
+                  <p className="nx-text-sm"><strong>General Inquiries</strong></p>
+                  <a href="mailto:admin@chatakeinnoworks.com" className="support-link">admin@chatakeinnoworks.com</a>
+                </div>
+              </div>
+
+              <p className="nx-text-muted nx-text-sm">
+                <strong>Note:</strong> Changes to institution name, ID, or type require verification and must be requested through support.
+              </p>
             </div>
           </div>
         </div>
@@ -153,9 +218,14 @@ export default function Settings() {
           <div className="nx-card-body">
             <div className="about-info">
               <p><strong>NEXORA Platform v1.0</strong></p>
-              <p className="nx-text-muted nx-text-sm">Enterprise academic management system</p>
-              <p className="nx-text-muted nx-text-sm">Developed by Chatake Innoworks Pvt. Ltd.</p>
-              <p className="nx-text-muted nx-text-sm">© 2025 All rights reserved</p>
+              <p className="nx-text-muted nx-text-sm">Enterprise Academic Management System</p>
+              <p className="nx-text-muted nx-text-sm">Developed by Chatake Innoworks</p>
+              <p className="nx-text-muted nx-text-sm">© 2026 Chatake Innoworks. All rights reserved.</p>
+              <div className="nx-mt-md">
+                <a href="https://nexora-be4467.webflow.io/" target="_blank" rel="noopener noreferrer" className="support-link">
+                  Visit NEXORA Website
+                </a>
+              </div>
             </div>
           </div>
         </div>

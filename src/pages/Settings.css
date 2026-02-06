@@ -134,6 +134,54 @@
   color: var(--nx-text-main);
 }
 
+/* ========== SUPPORT INFO ========== */
+.support-info {
+  padding: var(--nx-space-sm);
+}
+
+.support-info .setting-title {
+  font-size: var(--nx-body);
+  margin-bottom: var(--nx-space-md);
+  color: var(--nx-text-main);
+}
+
+.support-contacts {
+  display: flex;
+  gap: var(--nx-space-lg);
+  margin: var(--nx-space-md) 0;
+}
+
+.support-item {
+  flex: 1;
+  padding: var(--nx-space-md);
+  background-color: var(--nx-bg-subtle);
+  border-radius: var(--nx-radius-sm);
+  border: 1px solid var(--nx-border-light);
+}
+
+.support-item p {
+  margin: 0 0 var(--nx-space-xs) 0;
+}
+
+.support-link {
+  color: var(--nx-accent);
+  text-decoration: none;
+  font-weight: var(--nx-weight-medium);
+  transition: color var(--nx-transition-fast);
+}
+
+.support-link:hover {
+  color: var(--brand-orange);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .support-contacts {
+    flex-direction: column;
+    gap: var(--nx-space-sm);
+  }
+}
+
 /* ========== SETTINGS ACTIONS ========== */
 .settings-actions {
   display: flex;

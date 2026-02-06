@@ -1,6 +1,8 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import PlatformGateway from './pages/PlatformGateway';
+import SignUp from './pages/SignUp';
+import VerifyEmail from './pages/VerifyEmail';
 import DesignSystemDemo from './pages/DesignSystemDemo';
 import InteractiveDashboard from './pages/InteractiveDashboard';
 import Students from './pages/Students';
@@ -8,6 +10,7 @@ import Attendance from './pages/Attendance';
 import Results from './pages/Results';
 import Settings from './pages/Settings';
 import InstituteLayout from './layouts/InstituteLayout';
+import ProtectedRoute from './components/ProtectedRoute';
 
 /**
  * App Component
@@ -28,58 +31,75 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
+          {/* Public Routes */}
           <Route path="/platform" element={<PlatformGateway />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/demo-design" element={<DesignSystemDemo />} />
+
+          {/* Protected Routes - Require Authentication */}
           <Route
             path="/dashboard"
             element={
-              <InstituteLayout>
-                <div className="nx-container-fluid">
-                  <InteractiveDashboard />
-                </div>
-              </InstituteLayout>
+              <ProtectedRoute>
+                <InstituteLayout>
+                  <div className="nx-container-fluid">
+                    <InteractiveDashboard />
+                  </div>
+                </InstituteLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/students"
             element={
-              <InstituteLayout>
-                <div className="nx-container-fluid">
-                  <Students />
-                </div>
-              </InstituteLayout>
+              <ProtectedRoute>
+                <InstituteLayout>
+                  <div className="nx-container-fluid">
+                    <Students />
+                  </div>
+                </InstituteLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/attendance"
             element={
-              <InstituteLayout>
-                <div className="nx-container-fluid">
-                  <Attendance />
-                </div>
-              </InstituteLayout>
+              <ProtectedRoute>
+                <InstituteLayout>
+                  <div className="nx-container-fluid">
+                    <Attendance />
+                  </div>
+                </InstituteLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/results"
             element={
-              <InstituteLayout>
-                <div className="nx-container-fluid">
-                  <Results />
-                </div>
-              </InstituteLayout>
+              <ProtectedRoute>
+                <InstituteLayout>
+                  <div className="nx-container-fluid">
+                    <Results />
+                  </div>
+                </InstituteLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/settings"
             element={
-              <InstituteLayout>
-                <div className="nx-container-fluid">
-                  <Settings />
-                </div>
-              </InstituteLayout>
+              <ProtectedRoute>
+                <InstituteLayout>
+                  <div className="nx-container-fluid">
+                    <Settings />
+                  </div>
+                </InstituteLayout>
+              </ProtectedRoute>
             }
           />
+
+          {/* Default Route */}
           <Route path="/" element={<Navigate to="/platform" replace />} />
         </Routes>
       </div>
