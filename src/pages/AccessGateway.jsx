@@ -96,15 +96,12 @@ export default function AccessGateway() {
                   type="text"
                   id="instituteId"
                   className="access-gateway-input"
-                  placeholder="e.g., SIT-2026"
+                  placeholder="SIT-2026"
                   value={instituteId}
                   onChange={(e) => setInstituteId(e.target.value.toUpperCase())}
                   required
                   autoFocus
                 />
-                <p className="access-gateway-helper">
-                  Get your Institute Code from your admin
-                </p>
               </div>
 
               {error && (
@@ -169,14 +166,6 @@ export default function AccessGateway() {
 
         {/* Footer */}
         <div className="access-gateway-footer">
-          <div className="access-gateway-footer-support">
-            <a
-              href="mailto:nexora@chatakeinnoworks.com?subject=Access%20Support%20Request"
-              className="access-gateway-footer-support-link"
-            >
-              💬 Contact Nexora Support
-            </a>
-          </div>
           <p className="access-gateway-footer-powered">Powered by Nexora</p>
           <p className="access-gateway-footer-copyright">© 2026 Chatake Innoworks Pvt. Ltd.</p>
           <p className="access-gateway-footer-encrypted">🔒 Encrypted institutional access</p>
