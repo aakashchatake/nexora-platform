@@ -1,10 +1,38 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import { useAuth } from '../hooks/useAuth';
 
 export default function PlatformGateway() {
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
   const [showSignup, setShowSignup] = useState(false);
+
+  // If already authenticated, redirect to dashboard
+  React.useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isLoading, isAuthenticated, navigate]);
+
+  // Check for institute context (required for login)
+  React.useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      const params = new URLSearchParams(window.location.hash.split('?')[1]);
+      const instituteParam = params.get('institute');
+      const storedInstituteId = localStorage.getItem('nexora_institute_id');
+      
+      if (instituteParam) {
+        localStorage.setItem('nexora_institute_id', instituteParam);
+        console.log('Institute from AccessGateway saved:', instituteParam);
+      }
+      
+      if (!instituteParam && !storedInstituteId) {
+        console.warn('No institute context found, redirecting to /access');
+        navigate('/access', { replace: true });
+      }
+    }
+  }, [isLoading, isAuthenticated, navigate]);
   
   // Login state
   const [loginData, setLoginData] = useState({
@@ -24,7 +52,7 @@ export default function PlatformGateway() {
     passwordConfirm: '',
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -48,7 +76,7 @@ export default function PlatformGateway() {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSubmitting(true);
     setError('');
 
     try {
@@ -69,19 +97,19 @@ export default function PlatformGateway() {
       localStorage.setItem('nexora_email', user.email || '');
       localStorage.setItem('nexora_institute_id', meta.institute_id || '');
 
-      // Redirect to dashboard
-      navigate('/dashboard');
+      // Redirect to dashboard (never go back to /access)
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(err.message || 'An error occurred during login');
       console.error('Login error:', err);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSubmitting(true);
     setError('');
     setSuccessMessage('');
 
@@ -146,7 +174,7 @@ export default function PlatformGateway() {
       setError(err.message || 'An error occurred during signup');
       console.error('Signup error:', err);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -311,18 +339,18 @@ export default function PlatformGateway() {
 
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isSubmitting}
                 className="btn-primary"
                 style={{
                   width: '100%',
                   padding: 'var(--spacing-md)',
                   fontSize: '1rem',
                   fontWeight: 'var(--font-weight-semibold)',
-                  cursor: isLoading ? 'not-allowed' : 'pointer',
-                  opacity: isLoading ? 0.7 : 1,
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  opacity: isSubmitting ? 0.7 : 1,
                 }}
               >
-                {isLoading ? 'Authenticating...' : 'Sign In'}
+                {isSubmitting ? 'Authenticating...' : 'Sign In'}
               </button>
             </form>
 
@@ -640,18 +668,18 @@ export default function PlatformGateway() {
 
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isSubmitting}
                 className="btn-primary"
                 style={{
                   width: '100%',
                   padding: 'var(--spacing-md)',
                   fontSize: '1rem',
                   fontWeight: 'var(--font-weight-semibold)',
-                  cursor: isLoading ? 'not-allowed' : 'pointer',
-                  opacity: isLoading ? 0.7 : 1,
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  opacity: isSubmitting ? 0.7 : 1,
                 }}
               >
-                {isLoading ? 'Creating Account...' : 'Create Account'}
+                {isSubmitting ? 'Creating Account...' : 'Create Account'}
               </button>
             </form>
 

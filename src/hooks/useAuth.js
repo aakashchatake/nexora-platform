@@ -12,6 +12,8 @@ export function useAuth() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let mounted = true;
+
     // Check current session
     const checkSession = async () => {
       try {
@@ -21,27 +23,31 @@ export function useAuth() {
           throw sessionError;
         }
 
-        setSession(session);
-        
-        if (session?.user) {
-          const userData = {
-            id: session.user.id,
-            email: session.user.email,
-            fullName: session.user.user_metadata?.full_name || '',
-            institutionName: session.user.user_metadata?.institution_name || '',
-            institutionType: session.user.user_metadata?.institution_type || '',
-            instituteId: session.user.user_metadata?.institute_id || '',
-            phone: session.user.user_metadata?.phone || '',
-            address: session.user.user_metadata?.address || {},
-            role: 'admin',
-          };
-          setUser(userData);
+        if (mounted) {
+          setSession(session);
+          
+          if (session?.user) {
+            const userData = {
+              id: session.user.id,
+              email: session.user.email,
+              fullName: session.user.user_metadata?.full_name || '',
+              institutionName: session.user.user_metadata?.institution_name || '',
+              institutionType: session.user.user_metadata?.institution_type || '',
+              instituteId: session.user.user_metadata?.institute_id || '',
+              phone: session.user.user_metadata?.phone || '',
+              address: session.user.user_metadata?.address || {},
+              role: 'admin',
+            };
+            setUser(userData);
+          }
+          setIsLoading(false);
         }
       } catch (err) {
         console.error('Session check error:', err);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
+        if (mounted) {
+          setError(err.message);
+          setIsLoading(false);
+        }
       }
     };
 
@@ -49,29 +55,35 @@ export function useAuth() {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        
-        if (session?.user) {
-          const userData = {
-            id: session.user.id,
-            email: session.user.email,
-            fullName: session.user.user_metadata?.full_name || '',
-            institutionName: session.user.user_metadata?.institution_name || '',
-            institutionType: session.user.user_metadata?.institution_type || '',
-            instituteId: session.user.user_metadata?.institute_id || '',
-            phone: session.user.user_metadata?.phone || '',
-            address: session.user.user_metadata?.address || {},
-            role: 'admin',
-          };
-          setUser(userData);
-        } else {
-          setUser(null);
+      (event, session) => {
+        if (mounted) {
+          setSession(session);
+          
+          if (session?.user) {
+            const userData = {
+              id: session.user.id,
+              email: session.user.email,
+              fullName: session.user.user_metadata?.full_name || '',
+              institutionName: session.user.user_metadata?.institution_name || '',
+              institutionType: session.user.user_metadata?.institution_type || '',
+              instituteId: session.user.user_metadata?.institute_id || '',
+              phone: session.user.user_metadata?.phone || '',
+              address: session.user.user_metadata?.address || {},
+              role: 'admin',
+            };
+            setUser(userData);
+          } else {
+            setUser(null);
+          }
+          setIsLoading(false);
         }
       }
     );
 
-    return () => subscription?.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription?.unsubscribe();
+    };
   }, []);
 
   const logout = async () => {
