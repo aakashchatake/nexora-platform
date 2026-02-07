@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/nexora-platform/static/css/main.5f4ff43d.css",
-    "main.js": "/nexora-platform/static/js/main.75843555.js",
+    "main.js": "/nexora-platform/static/js/main.ab85ad11.js",
     "static/js/453.1055f8d7.chunk.js": "/nexora-platform/static/js/453.1055f8d7.chunk.js",
     "index.html": "/nexora-platform/index.html",
     "main.5f4ff43d.css.map": "/nexora-platform/static/css/main.5f4ff43d.css.map",
-    "main.75843555.js.map": "/nexora-platform/static/js/main.75843555.js.map",
+    "main.ab85ad11.js.map": "/nexora-platform/static/js/main.ab85ad11.js.map",
     "453.1055f8d7.chunk.js.map": "/nexora-platform/static/js/453.1055f8d7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.5f4ff43d.css",
-    "static/js/main.75843555.js"
+    "static/js/main.ab85ad11.js"
   ]
 }

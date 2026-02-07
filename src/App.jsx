@@ -10,8 +10,6 @@ import Students from './pages/Students';
 import Attendance from './pages/Attendance';
 import Results from './pages/Results';
 import Settings from './pages/Settings';
-import StudentDashboard from './pages/dashboards/StudentDashboard';
-import StaffDashboard from './pages/dashboards/StaffDashboard';
 import InstituteLayout from './layouts/InstituteLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -104,23 +102,7 @@ function App() {
             }
           />
 
-          {/* Role-Based Dashboard Routes */}
-          <Route
-            path="/student/dashboard"
-            element={
-              <ProtectedRoute>
-                <StudentDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/staff/dashboard"
-            element={
-              <ProtectedRoute>
-                <StaffDashboard />
-              </ProtectedRoute>
-            }
-          />
+          {/* Admin Dashboard Route */}
           <Route
             path="/admin/dashboard"
             element={

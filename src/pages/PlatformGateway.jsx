@@ -7,26 +7,11 @@ export default function PlatformGateway() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
   const [showSignup, setShowSignup] = useState(false);
-  const [selectedRole, setSelectedRole] = useState(null); // NEW: Role selection state
 
-  // Check for stored role on mount
-  React.useEffect(() => {
-    const storedRole = localStorage.getItem('nexora_role_context');
-    if (storedRole) {
-      setSelectedRole(storedRole);
-    }
-  }, []);
-
-  // If already authenticated, redirect to role-based dashboard
+  // If already authenticated, redirect to admin dashboard
   React.useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      const role = localStorage.getItem('nexora_role_context') || 'admin';
-      const dashboardMap = {
-        'student': '/student/dashboard',
-        'staff': '/staff/dashboard',
-        'admin': '/admin/dashboard',
-      };
-      navigate(dashboardMap[role] || '/dashboard', { replace: true });
+      navigate('/admin/dashboard', { replace: true });
     }
   }, [isLoading, isAuthenticated, navigate]);
 
@@ -112,14 +97,8 @@ export default function PlatformGateway() {
       localStorage.setItem('nexora_email', user.email || '');
       localStorage.setItem('nexora_institute_id', meta.institute_id || '');
 
-      // Redirect to role-based dashboard
-      const role = localStorage.getItem('nexora_role_context') || 'admin';
-      const dashboardMap = {
-        'student': '/student/dashboard',
-        'staff': '/staff/dashboard',
-        'admin': '/admin/dashboard',
-      };
-      navigate(dashboardMap[role] || '/dashboard', { replace: true });
+      // Redirect to admin dashboard
+      navigate('/admin/dashboard', { replace: true });
     } catch (err) {
       setError(err.message || 'An error occurred during login');
       console.error('Login error:', err);
@@ -198,174 +177,6 @@ export default function PlatformGateway() {
       setIsSubmitting(false);
     }
   };
-
-  // NEW: Handle role selection
-  const handleRoleSelect = (role) => {
-    localStorage.setItem('nexora_role_context', role);
-    setSelectedRole(role);
-  };
-
-  //NEW: Render role selection UI if no role selected
-  if (!selectedRole) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem',
-        background: 'linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1428 100%)',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", "Roboto", sans-serif',
-      }}>
-        <div style={{ width: '100%', maxWidth: '600px', textAlign: 'center' }}>
-          {/* Header */}
-          <h1 style={{
-            fontSize: '2rem',
-            fontWeight: '700',
-            background: 'linear-gradient(135deg, #818cf8 0%, #c084fc 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            marginBottom: '1rem',
-            letterSpacing: '0.1em',
-          }}>
-            SELECT YOUR ROLE
-          </h1>
-          <p style={{
-            color: '#94a3b8',
-            marginBottom: '3rem',
-            fontSize: '1rem',
-          }}>
-            Choose your role to access the appropriate portal
-          </p>
-
-          {/* Role Cards */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-            gap: '1.5rem',
-            marginBottom: '2rem',
-          }}>
-            {/* Student Role */}
-            <div
-              onClick={() => handleRoleSelect('student')}
-              style={{
-                background: 'rgba(30, 41, 59, 0.4)',
-                backdropFilter: 'blur(20px)',
-                border: '1.5px solid rgba(148, 163, 184, 0.1)',
-                borderRadius: '16px',
-                padding: '2rem 1.5rem',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = '#818cf8';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 24px rgba(129, 140, 248, 0.2)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.1)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎓</div>
-              <h3 style={{ color: '#f1f5f9', margin: '0 0 0.5rem 0', fontSize: '1.25rem', fontWeight: '600' }}>
-                Student
-              </h3>
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '0.875rem' }}>
-                Grades, attendance, assignments
-              </p>
-            </div>
-
-            {/* Staff Role */}
-            <div
-              onClick={() => handleRoleSelect('staff')}
-              style={{
-                background: 'rgba(30, 41, 59, 0.4)',
-                backdropFilter: 'blur(20px)',
-                border: '1.5px solid rgba(148, 163, 184, 0.1)',
-                borderRadius: '16px',
-                padding: '2rem 1.5rem',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = '#c084fc';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 24px rgba(192, 132, 252, 0.2)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.1)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👨‍🏫</div>
-              <h3 style={{ color: '#f1f5f9', margin: '0 0 0.5rem 0', fontSize: '1.25rem', fontWeight: '600' }}>
-                Staff / Faculty
-              </h3>
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '0.875rem' }}>
-                Class management, grading
-              </p>
-            </div>
-
-            {/* Admin Role */}
-            <div
-              onClick={() => handleRoleSelect('admin')}
-              style={{
-                background: 'rgba(30, 41, 59, 0.4)',
-                backdropFilter: 'blur(20px)',
-                border: '1.5px solid rgba(148, 163, 184, 0.1)',
-                borderRadius: '16px',
-                padding: '2rem 1.5rem',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = '#34d399';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 24px rgba(52, 211, 153, 0.2)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.1)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚙️</div>
-              <h3 style={{ color: '#f1f5f9', margin: '0 0 0.5rem 0', fontSize: '1.25rem', fontWeight: '600' }}>
-                Admin
-              </h3>
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '0.875rem' }}>
-                Institution management
-              </p>
-            </div>
-          </div>
-
-          {/* Back Link */}
-          <button
-            onClick={() => {
-              localStorage.removeItem('nexora_institute_id');
-              localStorage.removeItem('nexora_institute_profile');
-              navigate('/access');
-            }}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#94a3b8',
-              fontSize: '0.875rem',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              marginTop: '1rem',
-            }}
-          >
-            ← Change Institute
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div style={{
